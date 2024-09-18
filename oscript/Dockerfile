@@ -1,11 +1,11 @@
 ARG DOCKER_REGISTRY_URL=library
 ARG BASE_IMAGE=debian
-ARG BASE_TAG=bullseye-slim
+ARG BASE_TAG=bookworm-slim
 
 FROM ${DOCKER_REGISTRY_URL}/${BASE_IMAGE}:${BASE_TAG}
 
 # Installing mono and oscript dependencies
-ARG MONO_VERSION=6.12.0.122
+ARG MONO_VERSION=6.12.0.206
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -13,8 +13,8 @@ RUN apt-get update \
       gnupg \
       dirmngr \
       wget \
-  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
-  && echo "deb http://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list \
+      && wget -qO- https://download.mono-project.com/repo/xamarin.gpg | gpg --dearmor > /usr/share/keyrings/mono-official-archive-keyring.gpg \
+      && echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     mono-runtime \

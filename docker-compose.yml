@@ -12,7 +12,7 @@ services:
       - srv_data:/home/usr1cv8/.1cv8
       - srv_log:/var/log/1C
     networks:
-      - back_net
+      - onec_net
 
   db:
     image: rsyuzyov/docker-postgresql-pro-1c:${ONEC_PG_VERSION}
@@ -21,44 +21,45 @@ services:
     volumes:
       - db_data:/var/lib/postgresql
     networks:
-      back_net:
+      onec_net:
         aliases:
           - db
 
-  repo:
-    image: ${DOCKER_REGISTRY_URL}/onec-crs:${ONEC_VERSION}
-    ports:
-      - "${CRS_PORT}:1542"
-    volumes:
-      - repo_data:/home/usr1cv8/.1cv8
-    networks:
-      - back_net
+  # repo:
+  #   image: ${DOCKER_REGISTRY_URL}/onec-crs:${ONEC_VERSION}
+  #   ports:
+  #     - "${CRS_PORT}:1542"
+  #   volumes:
+  #     - repo_data:/home/usr1cv8/.1cv8
+  #   networks:
+  #     - back_net
 
-  ras:
-    image: ${DOCKER_REGISTRY_URL}/onec-server:${ONEC_VERSION}
-    entrypoint: /opt/1cv8/current/ras
-    command: "cluster srv:1540"
-    ports:
-      - "${RAS_PORT}:1545"
-    networks:
-      - back_net
+  # ras:
+  #   image: ${DOCKER_REGISTRY_URL}/onec-server:${ONEC_VERSION}
+  #   entrypoint: /opt/1cv8/current/ras
+  #   command: "cluster srv:1540"
+  #   ports:
+  #     - "${RAS_PORT}:1545"
+  #   networks:
+  #     - back_net
 
-  client:
-    image: ${DOCKER_REGISTRY_URL}/onec-client-vnc:${ONEC_VERSION}
-    ports:
-      - "5900:5900"
-    volumes:
-      - client_data:/home/usr1cv8/.1cv8
-      - ${PWD}/nethasp.ini:/opt/1cv8/current/conf/nethasp.ini
-    networks:
-      - back_net
+  # client:
+  #   image: ${DOCKER_REGISTRY_URL}/onec-client-vnc:${ONEC_VERSION}
+  #   ports:
+  #     - "5900:5900"
+  #   volumes:
+  #     - client_data:/home/usr1cv8/.1cv8
+  #     - ${PWD}/nethasp.ini:/opt/1cv8/current/conf/nethasp.ini
+  #   networks:
+  #     - back_net
 
 volumes:
   srv_data: {}
   srv_log: {}
   db_data: {}
-  repo_data: {}
-  client_data: {}
+  # repo_data: {}
+  # client_data: {}
 
 networks:
-  back_net: {}
+  onec_net:
+    driver: bridge
